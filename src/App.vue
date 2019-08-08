@@ -1,29 +1,50 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+  <main class="app">
+    <router-link
+      class="app__title"
+      tag="h1"
+      to="/"
+    >
+      Starships
+    </router-link>
     <router-view/>
-  </div>
+  </main>
 </template>
+<script>
+import { INIT_STARSHIPS_CACHE } from '@/store/types';
 
+export default {
+  mounted() {
+    // console.log(this.$store.commit())
+    this.$store.commit(INIT_STARSHIPS_CACHE)
+  }
+}
+</script>
 <style lang="scss">
-#app {
+.app {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   text-align: center;
-  color: #2c3e50;
+
+  background-color: $background-color;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+
+.app__title {
+  display: block;
+  padding: 20px 0;
+  margin: 0;
+
+  text-transform: uppercase;
+  letter-spacing: .4em;
+
+  text-align: center;
+  color: $yellow-color;
 }
+
 </style>
