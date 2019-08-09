@@ -32,8 +32,17 @@ export default {
         this.transitionName = 'none'
         return;
       }
-
+      this.scrollToTop();
       this.transitionName = to.name === 'home' ? 'up' : 'down'
+    }
+  },
+  methods: {
+    scrollToTop() {
+      const c = document.documentElement.scrollTop || document.body.scrollTop;
+      if (c > 0) {
+        window.requestAnimationFrame(this.scrollToTop);
+        window.scrollTo(0, c - c / 8);
+      }
     }
   },
   mounted() {
