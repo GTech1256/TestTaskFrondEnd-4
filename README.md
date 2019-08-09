@@ -1,5 +1,7 @@
 # studwork
 
+[DEMO](http://studwork.eu-4.evennode.com/)
+
 ## Project setup
 ```
 yarn install
@@ -23,6 +25,12 @@ yarn run test
 ### Lints and fixes files
 ```
 yarn run lint
+```
+
+### Start server
+only after build.
+```
+yarn run start
 ```
 
 ### Customize configuration

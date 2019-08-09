@@ -11,18 +11,29 @@ export default {
       return (<h3 class="pulse">Loading</h3>);
     }
 
+    const linkCreator = (arrayLinks) => arrayLinks.map(
+      (link, i, arr) => <a class="starship-details__link" href={link}>{`link#${i + 1}`}</a>
+    )
+
+    const linkChecker = (txt) => txt.match('http') ?
+      (<a class="starship-details__link" href={txt}>link</a>) :
+      txt;
+
     const additInfo = (
 
       Object.entries(this.starshipSchema)
         .map(([key, value]) => (
-          <p class="starship-details__property" data-description={value.description}>{starship[key]}</p>
+          <p class="starship-details__property" data-description={value.description}>
+
+            {Array.isArray(starship[key]) ? linkCreator(starship[key])  : linkChecker(starship[key])}
+          </p>
         ))
     );
     const section = (
     <section class="starship-details">
       <h3>{starship.name}</h3>
       <p>{starship.model}</p>
-      { additInfo}
+      {additInfo}
     </section>
     );
 
@@ -90,5 +101,12 @@ export default {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+}
+
+.starship-details__link {
+  margin: 0 10px;
+  text-decoration: underline;
+
+  color: $yellow-color;
 }
 </style>
