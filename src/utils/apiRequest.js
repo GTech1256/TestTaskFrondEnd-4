@@ -14,6 +14,7 @@ apiRequest.interceptors.response.use(
   (error) => {
     // error can handle with some analytics utils
     console.log(error);
+    return error;
   },
 );
 

@@ -46,8 +46,12 @@ function forceFetch({ state, commit }, query, page) {
   commit(SET_MODULE_STARSHIP_NEXT_PAGE, 1);
 
   return getAllStarshipResources({ search: query, page })
-    .then(({ data }) => {
-      setALLStarships({ state, commit }, data, page);
+    .then((res) => {
+      if (res.status !== 200) {
+        throw new Error(res);
+      }
+
+      setALLStarships({ state, commit }, res.data, page);
       commit(SET_FETCH_STATUS_SUCCESS);
     })
     .catch((e) => {

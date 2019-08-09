@@ -9,7 +9,7 @@
       @input="search"
     >
     <div class="home__paginator"
-      v-if="1 != computedNextPage"
+      v-if="1 < computedNextPage && !starshipsIsLoading"
     >
       <button
         class="home__btn home__btn_left"
@@ -47,87 +47,80 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { debounce } from 'debounce';
 import {
   FETCH_STARSHIPS,
-  SET_MODULE_STARSHIP_NEXT_PAGE
-} from '@/store/types'
-import StarshipCard from '@/components/StarshipCard'
-import { mapGetters } from 'vuex';
-import { debounce } from "debounce";
+} from '@/store/types';
+import StarshipCard from '@/components/StarshipCard.vue';
 
 export default {
   name: 'home',
   components: {
-    StarshipCard
+    StarshipCard,
   },
   props: {
     // from router
     query: {
       type: String,
-      default: ''
+      default: '',
     },
     // from router
     page: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
   },
   data() {
     return {
       queryInput: this.query,
       nowDebounceFN: {
-        clear: () => {}
-      }
-    }
+        clear: () => {},
+      },
+    };
   },
   computed: {
     computedNextPage() {
-      return this.query.trim() === '' ? this.starshipsPageCounts : this.nextPage
+      const res = this.query.trim() === '' ? this.starshipsPageCounts : this.nextPage;
+      return res >= this.page ? res : this.page;
     },
     ...mapGetters([
-    'starships',
-    'starshipsCount',
-    'nextPage',
-    'starshipsPageCounts',
-    'starshipsIsLoading',
-  ])
+      'starships',
+      'nextPage',
+      'starshipsPageCounts',
+      'starshipsIsLoading',
+    ]),
   },
   created() {
     this.fetchStarships(this.query, this.page);
   },
   methods: {
-    fetchStarships(query, page) {
-      if(this.query !== query || this.page !== page) {
+    fetchStarships(query, page, isForceLoad) {
+      if (this.query !== query || this.page !== page) {
         this.$router.push({
           query: {
             q: query,
-            p: page
-          }
-        })
+            p: page,
+          },
+        });
       }
 
       return this.$store.dispatch(FETCH_STARSHIPS, {
         page,
         query,
-        isForceLoad: !!query
-      })
+        isForceLoad: !!query || isForceLoad,
+      }).catch(() => {
+        this.fetchStarships(query, 1);
+      });
     },
     search() {
-      this.nowDebounceFN.clear()
+      this.nowDebounceFN.clear();
       this.nowDebounceFN = debounce(() => {
-        this.fetchStarships(this.queryInput, this.page, true)
-          .then(() => {
-            /*
-            this.$router.push({
-              query: { p: 1 }
-            })
-            */
-            // this.$store.commit(SET_MODULE_STARSHIP_NEXT_PAGE, 1);
-          })
-      }, 500)
+        this.fetchStarships(this.queryInput, this.queryInput === '' ? 1 : this.page, true);
+      }, 500);
       this.nowDebounceFN();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">
@@ -219,7 +212,8 @@ export default {
   }
 }
 
-.home__btn_left:hover {
+.home__btn_left:hover,
+.home__btn_left:focus {
   &::before {
     left: 100px
   }
@@ -228,8 +222,7 @@ export default {
   }
 }
 
-.home__btn_left:active,
-.home__btn_left:focus {
+.home__btn_left:active {
   &::before {
     left: 30px;
   }
@@ -252,7 +245,8 @@ export default {
   border-bottom-color: transparent;
 }
 
-.home__btn_right:hover {
+.home__btn_right:hover,
+.home__btn_right:focus {
   &::before {
     right: 100px;
   }
@@ -261,8 +255,7 @@ export default {
   }
 }
 
-.home__btn_right:active,
-.home__btn_right:focus {
+.home__btn_right:active {
   &::before {
     right: 40px;
   }
@@ -305,4 +298,3 @@ export default {
   }
 }
 </style>
-

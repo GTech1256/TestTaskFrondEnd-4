@@ -19,10 +19,10 @@ export default {
   props: {
     starship: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-}
+};
 </script>
 <style lang="scss">
 .starship-card {

@@ -4,10 +4,10 @@ import { FETCH_ONE_STARSHIP } from '@/store/types';
 
 export default {
   name: 'starship-details',
-  render (createElement) {
-    const starship = this.starship;
+  render() {
+    const { starship } = this;
 
-    if(!starship || starship.id !== this.id) {
+    if (!starship || starship.id !== this.id) {
       return (<h3 class="pulse">Loading</h3>);
     }
 
@@ -24,7 +24,7 @@ export default {
       <p>{starship.model}</p>
       { additInfo}
     </section>
-    )
+    );
 
     return section;
   },
@@ -32,8 +32,8 @@ export default {
     // from router
     id: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {
     this.$store.dispatch(FETCH_ONE_STARSHIP, { id: this.id });
@@ -41,10 +41,10 @@ export default {
   computed: {
     ...mapGetters({
       starship: 'starshipById',
-      starshipSchema: 'starshipSchema'
-    })
+      starshipSchema: 'starshipSchema',
+    }),
   },
-}
+};
 </script>
 <style lang="scss">
 .starship-details {
