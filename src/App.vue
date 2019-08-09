@@ -8,7 +8,9 @@
     >
       Starships
     </router-link>
-    <router-view/>
+    <transition :name="transitionName" mode="out-in">
+      <router-view/>
+    </transition>
   </main>
 </template>
 <script>
@@ -21,6 +23,19 @@ import {
 
 export default {
   computed: mapGetters(['starshipSchema']),
+  data: () => ({
+    transitionName: 'up'
+  }),
+  watch: {
+    '$route' (to, from) {
+      if (to.name === from.name) {
+        this.transitionName = 'none'
+        return;
+      }
+
+      this.transitionName = to.name === 'home' ? 'up' : 'down'
+    }
+  },
   mounted() {
     if (!this.starshipSchema) {
       this.$store.dispatch(FETCH_STARSHIPS_SCHEMA);
@@ -72,4 +87,31 @@ export default {
   }
 }
 
+.up-enter-active,
+.up-leave-active,
+.down-enter-active,
+.down-leave-active {
+  transition: opacity .3s, transform .4s;
+  opacity: 1;
+  transform: scale(1);
+  position: relative;
+}
+.up-enter,
+.up-leave-to,
+.down-enter,
+.down-leave-to {
+  opacity: 0;
+}
+.up-leave-to {
+  transform: scale(1.2);
+}
+.up-enter {
+  transform: scale(0);
+}
+.down-leave-to {
+  transform: scale(0);
+}
+.down-enter {
+  transform: scale(1.2);
+}
 </style>
