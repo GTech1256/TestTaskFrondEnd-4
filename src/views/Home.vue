@@ -12,16 +12,16 @@
       v-if="1 != computedNextPage"
     >
       <button
-        class="home__btn"
+        class="home__btn home__btn_left"
         type="button"
         :disabled="page === 1"
         @click="fetchStarships(query, page - 1)"
       >
         Предыдущая страница
       </button>
-      <p>{{ `${page} / ${computedNextPage} `}}</p>
+      <p class="home__page-num">{{ `${page} / ${computedNextPage} `}}</p>
       <button
-        class="home__btn"
+        class="home__btn home__btn_right"
         type="button"
         :disabled="page >= computedNextPage"
         @click="fetchStarships(query, page + 1)"
@@ -168,16 +168,141 @@ export default {
   margin-bottom: 50px;
 }
 
+.home__btn {
+  width: 200px;
+  height: 100px;
+
+  font-size: 0px;
+
+  position: relative;
+
+  background: transparent;
+  border: none;
+
+  cursor: pointer;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &::before,
+  &::after {
+    display: block;
+
+    position: absolute;
+    left: 90px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 100px;
+    height: 25px;
+
+    background: $yellow-color;
+
+    transition: left .3s, right .3s;
+    content: "";
+  }
+
+  &::after {
+    width: 0;
+    height: 0;
+    left: 60px;
+
+    background-color: transparent;
+
+    border: 40px solid $yellow-color;
+    border-left-width: 0;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+  }
+}
+
+.home__btn_left:hover {
+  &::before {
+    left: 100px
+  }
+  &::after {
+    left: 80px;
+  }
+}
+
+.home__btn_left:active,
+.home__btn_left:focus {
+  &::before {
+    left: 30px;
+  }
+  &::after {
+    left: 0px;
+  }
+}
+
+.home__btn_right::before {
+  left: auto;
+  right: 80px;
+}
+
+.home__btn_right::after {
+  left: auto;
+  right: 50px;
+  border-right-width: 0;
+  border-left-width: 40px;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.home__btn_right:hover {
+  &::before {
+    right: 100px;
+  }
+  &::after {
+    right: 85px;
+  }
+}
+
+.home__btn_right:active,
+.home__btn_right:focus {
+  &::before {
+    right: 40px;
+  }
+  &::after {
+    right: 0px;
+  }
+}
+
 .home__paginator {
   display: flex;
+  flex-wrap: wrap;
   width: 900px;
   max-width: 75%;
   margin: 0 auto;
   margin-bottom: 50px;
 
   justify-content: space-around;
+}
 
+.home__page-num {
+  padding: 0;
+  margin: 0;
 
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 100px;
+}
+
+@media screen and (max-width: 800px) {
+  .home__paginator {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home__btn_left {
+    margin-right: 70px;
+  }
+  .home__btn_right {
+    margin-left: 70px;
+  }
 }
 </style>
 

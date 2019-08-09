@@ -60,7 +60,7 @@ export default {
 }
 
 .starship-details__property {
-  margin: 0;
+  margin: 0 30px;
 
   position: relative;
 
