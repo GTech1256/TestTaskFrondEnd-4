@@ -17,6 +17,6 @@ export default {
   starships: [], // for output
   starshipsCount: 0,
   starshipsNextPage: 1,
-  starshipsPageCount: 1,
+  starshipsPageCounts: 1,
   starshipSchema: {},
 };
