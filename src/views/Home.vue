@@ -6,6 +6,7 @@
       type="search"
       placeholder="name"
       v-model="queryInput"
+      @input="search"
     >
     <ul class="home__list" v-if="starships.length !== 0">
       <starship-card
@@ -22,20 +23,21 @@
       Загрузка
     </p>
     <div class="home__paginator"
-      v-if="page !== totalPages"
+      v-if="page !== nextPage"
     >
       <button
         class="home__btn"
         type="button"
-        :disabled="page <= totalPages"
+        :disabled="page <= nextPage"
       >
         Следующая страница
       </button>
-      <p>{{ `${page} / ${totalPages} `}}</p>
+      <p>{{ `${page} / ${nextPage} `}}</p>
       <button
         class="home__btn"
         type="button"
-        :disabled="page >= totalPages"
+        :disabled="page >= nextPage"
+        @click="fetchStarships(query, page + 1)"
       >
         Следующая страница
       </button>
@@ -47,6 +49,7 @@
 import { FETCH_STARSHIPS } from '@/store/types'
 import StarshipCard from '@/components/StarshipCard'
 import { mapGetters } from 'vuex';
+import { debounce } from "debounce";
 
 export default {
   name: 'home',
@@ -68,26 +71,36 @@ export default {
   data() {
     return {
       queryInput: this.query,
-      totalPages: 1
+      nowDebounceFN: {
+        clear: () => {}
+      }
     }
   },
   computed: mapGetters([
     'starships',
     'starshipsCount',
     'nextPage',
-    'starshipsIsLoading'
+    'starshipsIsLoading',
   ]),
   created() {
-
-    this.$store.dispatch(FETCH_STARSHIPS, {
-      page: this.page,
-      query: this.query
-    })
-
+    this.fetchStarships(this.query, this.page);
   },
   methods: {
+    fetchStarships(query, page, isForceLoad) {
+      this.$store.dispatch(FETCH_STARSHIPS, {
+        page: this.page,
+        query
+      }, isForceLoad)
+    },
     search() {
-
+      this.nowDebounceFN.clear()
+      this.nowDebounceFN = debounce(() => {
+        this.$router.push({
+          query: { q: this.queryInput   }
+        })
+        this.fetchStarships(this.queryInput, this.page, true)
+      }, 500)
+      this.nowDebounceFN();
     }
   }
 };
@@ -101,6 +114,7 @@ export default {
   width: 400px;
   max-width: 75%;
   margin-bottom: 50px;
+  padding: 5px 0;
 
   text-align: center;
 

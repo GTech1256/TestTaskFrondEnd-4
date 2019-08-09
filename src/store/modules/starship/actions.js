@@ -30,7 +30,9 @@ import expiresInTimestamp from '@/utils/cache/expireTimer';
 function setALLStarships({ state, commit }, { results, count, next }, page, willCache = true) {
   // if (results.length !== 0) {
   commit(SET_MODULE_STARSHIP_COUNT, count);
-  commit(SET_MODULE_STARSHIP_NEXT_PAGE, next.match(/(\d+)+\/?$/)[1]);
+  if (next) {
+    commit(SET_MODULE_STARSHIP_NEXT_PAGE, next.match(/(\d+)+\/?$/)[1]);
+  }
   commit(SET_STARSHIPS, willCache ? cache(state, results, page) : results);
   // }
 }
@@ -71,9 +73,9 @@ export default {
         throw new Error(e);
       });
   },
-  [FETCH_STARSHIPS](store, { query, page }) {
+  [FETCH_STARSHIPS](store, { query, page }, isForceLoad = false) {
     try {
-      if (!Object.keys(store.state.starshipsCache).length) {
+      if (!Object.keys(store.state.starshipsCache).length || isForceLoad) {
         forceFetch(store, query, page);
         return;
       }
