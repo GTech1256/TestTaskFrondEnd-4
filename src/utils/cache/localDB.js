@@ -12,7 +12,7 @@ window.addEventListener('storage', (event) => {
   }
 });
 
-export function setData(data, name) {
+export function setData(name, data) {
   localStorage.setItem(
     name,
     JSON.stringify(data),

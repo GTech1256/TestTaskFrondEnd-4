@@ -1,6 +1,7 @@
 import {
   getAllStarshipResources,
   getSpecificStarshipResources,
+  getJSONSchema,
 } from '@/api/starships';
 
 import {
@@ -10,6 +11,8 @@ import {
   SET_FETCH_STATUS_LOADING,
   SET_FETCH_STATUS_SUCCESS,
   SET_FETCH_STATUS_ERROR,
+  FETCH_STARSHIPS_SCHEMA,
+  SET_STARSHIPS_SCHEMA,
   FETCH_ONE_STARSHIP,
   SET_STARSHIP_BY_ID,
   FETCH_STARSHIPS,
@@ -28,8 +31,9 @@ import expiresInTimestamp from '@/utils/cache/expireTimer';
  * @param {*} page
  */
 function setALLStarships({ state, commit }, { results, count, next }, page, willCache = true) {
-  // if (results.length !== 0) {
-  commit(SET_MODULE_STARSHIP_COUNT, count);
+  if (count) {
+    commit(SET_MODULE_STARSHIP_COUNT, count);
+  }
   if (next) {
     commit(SET_MODULE_STARSHIP_NEXT_PAGE, next.match(/(\d+)+\/?$/)[1]);
   }
@@ -40,7 +44,7 @@ function setALLStarships({ state, commit }, { results, count, next }, page, will
 function forceFetch({ state, commit }, query, page) {
   commit(SET_FETCH_STATUS_LOADING);
 
-  getAllStarshipResources({ search: query, page })
+  return getAllStarshipResources({ search: query, page })
     .then(({ data }) => {
       setALLStarships({ state, commit }, data, page);
       commit(SET_FETCH_STATUS_SUCCESS);
@@ -53,6 +57,12 @@ function forceFetch({ state, commit }, query, page) {
 
 
 export default {
+  [FETCH_STARSHIPS_SCHEMA]({ commit }) {
+    return getJSONSchema()
+      .then(({ data }) => {
+        commit(SET_STARSHIPS_SCHEMA, data.properties);
+      });
+  },
   [FETCH_ONE_STARSHIP]({ state, commit }, { id }) {
     const cachedStarship = state.starshipsCache[id];
     const { timeNow } = expiresInTimestamp();
@@ -73,14 +83,13 @@ export default {
         throw new Error(e);
       });
   },
-  [FETCH_STARSHIPS](store, { query, page }, isForceLoad = false) {
+  [FETCH_STARSHIPS](store, { query, page, isForceLoad = false }) {
     try {
       if (!Object.keys(store.state.starshipsCache).length || isForceLoad) {
-        forceFetch(store, query, page);
-        return;
+        return forceFetch(store, query, page);
       }
-
-      loadFromCache(store, { query, page })
+      console.log('cache load');
+      return loadFromCache(store, { query, page })
         .then(({
           nextPage,
           starships: results,
@@ -88,6 +97,7 @@ export default {
         .catch(() => forceFetch(store, query, page));
     } catch (e) {
       console.log(e);
+      return Promise.reject(e);
     }
   },
 };

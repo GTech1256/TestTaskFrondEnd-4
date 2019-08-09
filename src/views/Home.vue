@@ -5,10 +5,31 @@
       class="home__search"
       type="search"
       placeholder="name"
-      v-model="queryInput"
+      v-model.trim="queryInput"
       @input="search"
     >
-    <ul class="home__list" v-if="starships.length !== 0">
+    <div class="home__paginator"
+      v-if="1 != computedNextPage"
+    >
+      <button
+        class="home__btn"
+        type="button"
+        :disabled="page === 1"
+        @click="fetchStarships(query, page - 1)"
+      >
+        Предыдущая страница
+      </button>
+      <p>{{ `${page} / ${computedNextPage} `}}</p>
+      <button
+        class="home__btn"
+        type="button"
+        :disabled="page >= computedNextPage"
+        @click="fetchStarships(query, page + 1)"
+      >
+        Следующая страница
+      </button>
+    </div>
+    <ul class="home__list" v-if="starships.length !== 0 && !starshipsIsLoading">
       <starship-card
         class="home__item"
         v-for="starship in starships"
@@ -22,31 +43,14 @@
     <p class="pulse" v-else>
       Загрузка
     </p>
-    <div class="home__paginator"
-      v-if="page !== nextPage"
-    >
-      <button
-        class="home__btn"
-        type="button"
-        :disabled="page <= nextPage"
-      >
-        Следующая страница
-      </button>
-      <p>{{ `${page} / ${nextPage} `}}</p>
-      <button
-        class="home__btn"
-        type="button"
-        :disabled="page >= nextPage"
-        @click="fetchStarships(query, page + 1)"
-      >
-        Следующая страница
-      </button>
-    </div>
   </section>
 </template>
 
 <script>
-import { FETCH_STARSHIPS } from '@/store/types'
+import {
+  FETCH_STARSHIPS,
+  SET_MODULE_STARSHIP_NEXT_PAGE
+} from '@/store/types'
 import StarshipCard from '@/components/StarshipCard'
 import { mapGetters } from 'vuex';
 import { debounce } from "debounce";
@@ -76,29 +80,50 @@ export default {
       }
     }
   },
-  computed: mapGetters([
+  computed: {
+    computedNextPage() {
+      return this.query.trim() === '' ? this.starshipsPageCounts : this.nextPage
+    },
+    ...mapGetters([
     'starships',
     'starshipsCount',
     'nextPage',
+    'starshipsPageCounts',
     'starshipsIsLoading',
-  ]),
+  ])
+  },
   created() {
     this.fetchStarships(this.query, this.page);
   },
   methods: {
-    fetchStarships(query, page, isForceLoad) {
-      this.$store.dispatch(FETCH_STARSHIPS, {
-        page: this.page,
-        query
-      }, isForceLoad)
+    fetchStarships(query, page) {
+      if(this.query !== query || this.page !== page) {
+        this.$router.push({
+          query: {
+            q: query,
+            p: page
+          }
+        })
+      }
+
+      return this.$store.dispatch(FETCH_STARSHIPS, {
+        page,
+        query,
+        isForceLoad: !!query
+      })
     },
     search() {
       this.nowDebounceFN.clear()
       this.nowDebounceFN = debounce(() => {
-        this.$router.push({
-          query: { q: this.queryInput   }
-        })
         this.fetchStarships(this.queryInput, this.page, true)
+          .then(() => {
+            /*
+            this.$router.push({
+              query: { p: 1 }
+            })
+            */
+            // this.$store.commit(SET_MODULE_STARSHIP_NEXT_PAGE, 1);
+          })
       }, 500)
       this.nowDebounceFN();
     }
@@ -147,10 +172,12 @@ export default {
   display: flex;
   width: 900px;
   max-width: 75%;
+  margin: 0 auto;
+  margin-bottom: 50px;
 
   justify-content: space-around;
 
-  margin: 0 auto;
+
 }
 </style>
 

@@ -7,10 +7,13 @@ import {
   SET_FETCH_STATUS_ERROR,
 
   SET_PAGE_STARSHIPS_CACHE,
+  SET_STARSHIPS_SCHEMA,
   SET_STARSHIPS_CACHE,
   SET_STARSHIP_BY_ID,
   SET_STARSHIPS,
 } from '@/store/types';
+
+import { setData } from '@/utils/cache/localDB';
 
 export default {
   [SET_STARSHIP_BY_ID](state, starship) {
@@ -29,7 +32,8 @@ export default {
     state.starshipsStatus = state.starshipsStatuses.error;
   },
   [SET_MODULE_STARSHIP_COUNT](state, count) {
-    state.count = count;
+    state.starshipsCount = count;
+    setData('starshipsCount', count);
   },
   [SET_MODULE_STARSHIP_NEXT_PAGE](state, starshipsNextPage) {
     state.starshipsNextPage = starshipsNextPage;
@@ -39,5 +43,9 @@ export default {
   },
   [SET_PAGE_STARSHIPS_CACHE](state, newCache) {
     state.starshipsCache = newCache;
+  },
+  [SET_STARSHIPS_SCHEMA](state, schema) {
+    state.starshipSchema = schema;
+    setData('starshipSchema', schema);
   },
 };

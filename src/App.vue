@@ -16,10 +16,16 @@ import { subscrubeData, unsubscrubeAllData } from '@/utils/cache/localDB';
 import {
   SET_PAGE_STARSHIPS_CACHE,
   SET_STARSHIPS_CACHE,
+  FETCH_STARSHIPS_SCHEMA
 } from '@/store/types';
+import { mapGetters } from 'vuex';
 
 export default {
+  computed: mapGetters(['starshipSchema']),
   mounted() {
+    if (!this.starshipSchema) {
+      this.$store.dispatch(FETCH_STARSHIPS_SCHEMA)
+    }
     subscrubeData('starshipsCache', (newValue) => {
       this.$store.commit(SET_PAGE_STARSHIPS_CACHE, newValue)
     })

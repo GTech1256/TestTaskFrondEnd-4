@@ -49,10 +49,10 @@ export default function cache({ starshipsCache, pageStarshipsCache }, newStarshi
     res.push(_starship);
   }
 
-  setData(starshipsCache, 'starshipsCache');
+  setData('starshipsCache', starshipsCache);
 
   if (pageCacheWillUpdate) {
-    setData(pageStarshipsCache, 'pageStarshipsCache');
+    setData('pageStarshipsCache', pageStarshipsCache);
   }
   return res;
 }

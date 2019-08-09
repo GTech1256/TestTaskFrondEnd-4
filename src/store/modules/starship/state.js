@@ -7,7 +7,7 @@ export default {
   pageStarshipsCache: getData('pageStarshipsCache') || {
     // [page]: { starshipsId: [starship_id, starship_id, ....], expiresIn: Date }
   },
-  starshipsStatus: 0,
+  starshipsStatus: 1,
   starshipById: null,
   starshipsStatuses: {
     loading: 0,
@@ -15,8 +15,7 @@ export default {
     error: 2,
   },
   starships: [], // for output
-  starshipsCount: 0,
+  starshipsCount: getData('starshipsCount') || 0,
   starshipsNextPage: 1,
-  starshipsPageCounts: 1,
-  starshipSchema: {},
+  starshipSchema: getData('starshipSchema'),
 };
