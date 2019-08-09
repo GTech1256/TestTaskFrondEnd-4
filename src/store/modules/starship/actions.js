@@ -43,6 +43,7 @@ function setALLStarships({ state, commit }, { results, count, next }, page, will
 
 function forceFetch({ state, commit }, query, page) {
   commit(SET_FETCH_STATUS_LOADING);
+  commit(SET_MODULE_STARSHIP_NEXT_PAGE, 1);
 
   return getAllStarshipResources({ search: query, page })
     .then(({ data }) => {
@@ -90,6 +91,10 @@ export default {
       }
       console.log('cache load');
       return loadFromCache(store, { query, page })
+        .then((res) => {
+          store.commit(SET_FETCH_STATUS_SUCCESS);
+          return res;
+        })
         .then(({
           nextPage,
           starships: results,

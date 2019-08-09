@@ -11,13 +11,6 @@ export default {
       return (<h3 class="pulse">Loading</h3>);
     }
 
-
-    const header = (
-      <div class="starship-details__header">
-        <h3>{starship.name}</h3>
-        <p>{starship.model}</p>
-      </div>
-    )
     const additInfo = (
 
       Object.entries(this.starshipSchema)
@@ -27,7 +20,8 @@ export default {
     );
     const section = (
     <section class="starship-details">
-      { header }
+      <h3>{starship.name}</h3>
+      <p>{starship.model}</p>
       { additInfo}
     </section>
     )
