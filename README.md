@@ -1,6 +1,6 @@
 # studwork
 
-[DEMO](http://studwork.eu-4.evennode.com/)
+[DEMO](https://studwork-test.herokuapp.com/)
 
 ## Project setup
 ```
