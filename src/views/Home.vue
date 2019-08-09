@@ -15,8 +15,11 @@
         :starship="starship"
       />
     </ul>
-    <p v-else>
+    <p v-else-if="!starshipsIsLoading">
       По данным притериям кораблей нет
+    </p>
+    <p class="pulse" v-else>
+      Загрузка
     </p>
     <div class="home__paginator"
       v-if="page !== totalPages"
@@ -71,7 +74,8 @@ export default {
   computed: mapGetters([
     'starships',
     'starshipsCount',
-    'nextPage'
+    'nextPage',
+    'starshipsIsLoading'
   ]),
   created() {
 
@@ -89,10 +93,6 @@ export default {
 };
 </script>
 <style lang="scss">
-.home {
-
-}
-
 .home__title {
   margin-bottom: 50px;
 }

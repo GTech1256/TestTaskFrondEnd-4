@@ -70,17 +70,6 @@ export default {
   border-top: 1px solid gray;
 }
 
-.pulse {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  font-size: 30px;
-
-  animation: pulse 2s infinite;
-}
-
 @keyframes pulse {
   0% {
     opacity: 1;

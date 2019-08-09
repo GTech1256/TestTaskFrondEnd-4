@@ -4,4 +4,5 @@ export default {
   nextPage: state => state.starshipsNextPage,
   starshipById: state => state.starshipById,
   starshipSchema: state => state.starshipSchema,
+  starshipsIsLoading: state => state.starshipsStatus === state.starshipsStatuses.loading,
 };

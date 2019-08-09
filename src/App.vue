@@ -2,6 +2,7 @@
   <main class="app">
     <router-link
       class="app__title"
+      :class="{ app__title_inactive: $route.name === 'home' }"
       tag="h1"
       to="/"
     >
@@ -11,12 +12,24 @@
   </main>
 </template>
 <script>
-import { INIT_STARSHIPS_CACHE } from '@/store/types';
+import { subscrubeData, unsubscrubeAllData } from '@/utils/cache/localDB';
+import {
+  SET_PAGE_STARSHIPS_CACHE,
+  SET_STARSHIPS_CACHE,
+} from '@/store/types';
 
 export default {
   mounted() {
-    // console.log(this.$store.commit())
-    this.$store.commit(INIT_STARSHIPS_CACHE)
+    subscrubeData('starshipsCache', (newValue) => {
+      this.$store.commit(SET_PAGE_STARSHIPS_CACHE, newValue)
+    })
+    subscrubeData('pageStarshipsCache', (newValue) => {
+      this.$store.commit(SET_PAGE_STARSHIPS_CACHE, newValue)
+    })
+  },
+  beforeDestroy() {
+    unsubscrubeAllData('starshipsCache')
+    unsubscrubeAllData('pageStarshipsCache')
   }
 }
 </script>
@@ -45,6 +58,13 @@ export default {
 
   text-align: center;
   color: $yellow-color;
+
+  cursor: pointer;
+
+  &_inactive {
+    pointer-events: none;
+    cursor: default;
+  }
 }
 
 </style>

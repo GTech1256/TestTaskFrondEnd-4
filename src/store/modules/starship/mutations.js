@@ -1,16 +1,19 @@
 import {
   SET_MODULE_STARSHIP_NEXT_PAGE,
   SET_MODULE_STARSHIP_COUNT,
+
   SET_FETCH_STATUS_LOADING,
   SET_FETCH_STATUS_SUCCESS,
   SET_FETCH_STATUS_ERROR,
-  INIT_STARSHIPS_CACHE,
-  FETCH_ONE_STARSHIP,
+
+  SET_PAGE_STARSHIPS_CACHE,
+  SET_STARSHIPS_CACHE,
+  SET_STARSHIP_BY_ID,
   SET_STARSHIPS,
 } from '@/store/types';
 
 export default {
-  [FETCH_ONE_STARSHIP](state, starship) {
+  [SET_STARSHIP_BY_ID](state, starship) {
     state.starshipById = starship;
   },
   [SET_STARSHIPS](state, starships) {
@@ -31,8 +34,10 @@ export default {
   [SET_MODULE_STARSHIP_NEXT_PAGE](state, starshipsNextPage) {
     state.starshipsNextPage = starshipsNextPage;
   },
-  [INIT_STARSHIPS_CACHE](state) {
-    state.starshipsCache = JSON.parse(localStorage.getItem('starshipsCache'));
-    console.log(state.starshipsCache);
+  [SET_STARSHIPS_CACHE](state, newCache) {
+    state.starshipsCache = newCache;
+  },
+  [SET_PAGE_STARSHIPS_CACHE](state, newCache) {
+    state.starshipsCache = newCache;
   },
 };
