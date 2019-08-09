@@ -65,18 +65,6 @@ export default {
   border-top: 1px solid gray;
 }
 
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .starship-details__property {
   margin: 0;
 
