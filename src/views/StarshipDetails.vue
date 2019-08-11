@@ -61,7 +61,9 @@ export default {
 .starship-details {
   max-width: 900px;
   margin: 0 auto;
-  padding-bottom: 100px;
+  padding-bottom: 200px;
+
+  overflow: hidden;
 }
 
 .starship-details__addit-info {

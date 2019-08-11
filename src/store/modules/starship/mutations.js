@@ -1,4 +1,6 @@
 import {
+  SET_PREVIOUS_FETCH_VIA_CACHE,
+
   SET_MODULE_STARSHIP_NEXT_PAGE,
   SET_MODULE_STARSHIP_COUNT,
 
@@ -47,5 +49,8 @@ export default {
   [SET_STARSHIPS_SCHEMA](state, schema) {
     state.starshipSchema = schema;
     setData('starshipSchema', schema);
+  },
+  [SET_PREVIOUS_FETCH_VIA_CACHE](state, isViaCache) {
+    state.isPreviousFetchViaCache = isViaCache;
   },
 };

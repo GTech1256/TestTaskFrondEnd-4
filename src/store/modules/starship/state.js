@@ -18,4 +18,5 @@ export default {
   starshipsCount: getData('starshipsCount') || 0,
   starshipsNextPage: 1,
   starshipSchema: getData('starshipSchema'),
+  isPreviousFetchViaCache: false,
 };

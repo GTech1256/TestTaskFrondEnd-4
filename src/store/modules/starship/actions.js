@@ -5,6 +5,7 @@ import {
 } from '@/api/starships';
 
 import {
+  SET_PREVIOUS_FETCH_VIA_CACHE,
   SET_MODULE_STARSHIP_COUNT,
   SET_MODULE_STARSHIP_NEXT_PAGE,
   SET_STARSHIPS,
@@ -94,8 +95,15 @@ export default {
   [FETCH_STARSHIPS](store, { query, page, isForceLoad = false }) {
     try {
       if (!Object.keys(store.state.starshipsCache).length || isForceLoad) {
+        store.commit(SET_PREVIOUS_FETCH_VIA_CACHE, false);
         return forceFetch(store, query, page);
       }
+
+      if (!store.state.isPreviousFetchViaCache) {
+        store.commit(SET_PREVIOUS_FETCH_VIA_CACHE, true);
+        return forceFetch(store, query, page);
+      }
+
       console.log('cache load');
       return loadFromCache(store, { query, page })
         .then((res) => {
