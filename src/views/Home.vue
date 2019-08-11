@@ -95,13 +95,24 @@ export default {
     this.fetchStarships(this.query, this.page);
   },
   methods: {
+    queryPageGenerator(newQuery, newPage) {
+      const query = {}
+
+      if (newQuery !== '') {
+        query.q = newQuery
+      }
+
+      if (newPage !== 1) {
+        query.p = newPage
+      }
+
+      return query;
+    },
     fetchStarships(query, page, isForceLoad) {
+
       if (this.query !== query || this.page !== page) {
         this.$router.push({
-          query: {
-            q: query,
-            p: page,
-          },
+          query: this.queryPageGenerator(query, page)
         });
       }
 
@@ -109,8 +120,10 @@ export default {
         page,
         query,
         isForceLoad: !!query || isForceLoad,
-      }).catch(() => {
-        this.fetchStarships(query, 1);
+      }).catch((e) => {
+        if (this.page !== 1) {
+          this.fetchStarships(query, 1);
+        }
       });
     },
     search() {

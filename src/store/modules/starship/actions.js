@@ -34,8 +34,11 @@ function setALLStarships({ state, commit }, { results, count, next }, page, will
   if (count) {
     commit(SET_MODULE_STARSHIP_COUNT, count);
   }
+
   if (next) {
-    commit(SET_MODULE_STARSHIP_NEXT_PAGE, next.match(/(\d+)+\/?$/)[1]);
+    const parsedUrl = new URL(next);
+    const nextPage = parsedUrl.searchParams.get('page');
+    commit(SET_MODULE_STARSHIP_NEXT_PAGE, nextPage);
   }
   commit(SET_STARSHIPS, willCache ? cache(state, results, page) : results);
   // }
@@ -102,8 +105,11 @@ export default {
         .then(({
           nextPage,
           starships: results,
-        }) => setALLStarships(store, { results, count: store.state.count, next: `${nextPage}` }, page, false))
-        .catch(() => forceFetch(store, query, page));
+        }) => setALLStarships(store, { results, count: store.state.count, next: `http://fake.page/?page=${nextPage}` }, page, false))
+        .catch((e) => {
+          console.log('loadFromCache FAILED BY:', e);
+          forceFetch(store, query, page);
+        });
     } catch (e) {
       console.log(e);
       return Promise.reject(e);
