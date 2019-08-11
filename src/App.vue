@@ -19,6 +19,7 @@ import { subscrubeData, unsubscrubeAllData } from '@/utils/cache/localDB';
 import {
   SET_PAGE_STARSHIPS_CACHE,
   FETCH_STARSHIPS_SCHEMA,
+  SET_STARSHIPS_CACHE,
 } from '@/store/types';
 
 export default {
@@ -50,10 +51,10 @@ export default {
       this.$store.dispatch(FETCH_STARSHIPS_SCHEMA);
     }
     subscrubeData('starshipsCache', (newValue) => {
-      this.$store.commit(SET_PAGE_STARSHIPS_CACHE, newValue);
+      this.$store.commit(SET_STARSHIPS_CACHE, JSON.parse(newValue));
     });
     subscrubeData('pageStarshipsCache', (newValue) => {
-      this.$store.commit(SET_PAGE_STARSHIPS_CACHE, newValue);
+      this.$store.commit(SET_PAGE_STARSHIPS_CACHE, JSON.parse(newValue));
     });
   },
   beforeDestroy() {

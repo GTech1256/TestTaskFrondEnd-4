@@ -6,9 +6,7 @@ const observer = {
 
 window.addEventListener('storage', (event) => {
   if (observer[event.key]) {
-    observer[event.key].forEach(a => a(
-      JSON.parse(event.newValue),
-    ));
+    observer[event.key].forEach(a => a(event.newValue));
   }
 });
 
@@ -21,6 +19,12 @@ export function setData(name, data) {
 export function getData(name) {
   return JSON.parse(localStorage.getItem(name));
 }
+
+/**
+ *
+ * @param {*} name
+ * @param {function} cb return JSON.
+ */
 export function subscrubeData(name, cb) {
   if (!observer[name]) {
     observer[name] = [];

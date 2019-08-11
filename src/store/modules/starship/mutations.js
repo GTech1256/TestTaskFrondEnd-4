@@ -42,7 +42,7 @@ export default {
     state.starshipsCache = newCache;
   },
   [SET_PAGE_STARSHIPS_CACHE](state, newCache) {
-    state.starshipsCache = newCache;
+    state.pageStarshipsCache = newCache;
   },
   [SET_STARSHIPS_SCHEMA](state, schema) {
     state.starshipSchema = schema;
