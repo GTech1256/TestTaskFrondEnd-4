@@ -1,6 +1,6 @@
 # studwork
 
-[DEMO](https://studwork-test.herokuapp.com/)
+[DEMO](https://studwork.netlify.com/)
 
 ## Project setup
 ```
